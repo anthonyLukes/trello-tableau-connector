@@ -3,7 +3,7 @@ use Rack::Auth::Basic, "Restricted Area" do |username, password|
   [username, password] == ['admin', 'password1']
 end
 
-use Rack::Static, :urls => [""], :root => 'web', :index => 'index.html'
+use Rack::Static, :urls => [""], :root => 'web', :index => 'trelloConnector.html'
 
 run lambda { |env|
   [
@@ -12,6 +12,6 @@ run lambda { |env|
       'Content-Type'  => 'text/html',
       'Cache-Control' => 'public, max-age=0'
     },
-    File.open('web/index.html', File::RDONLY)
+    File.open('web/trelloConnector.html', File::RDONLY)
   ]
 }
