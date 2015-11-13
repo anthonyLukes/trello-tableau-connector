@@ -1,6 +1,6 @@
 # config.ru
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  [username, password] == ['admin', 'admin']
+  [username, password] == ['admin', '1234554321']
 end
 
 use Rack::Static, :urls => [""], :root => 'web', :index => 'index.html'
