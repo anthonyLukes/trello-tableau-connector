@@ -1,8 +1,3 @@
-# config.ru
-use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  [username, password] == ['admin', 'password1']
-end
-
 use Rack::Static, :urls => [""], :root => 'web', :index => 'trelloConnector.html'
 
 run lambda { |env|
