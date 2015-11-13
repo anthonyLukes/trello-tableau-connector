@@ -1,16 +1,13 @@
-# config.ru
-use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  [username, password] == ['admin', '1234554321']
-end
-
-use Rack::Static, :urls => [""], :root => 'web', :index => 'index.html'
+use Rack::Static,
+  :urls => ["/images", "/js", "/css"],
+  :root => "web"
 
 run lambda { |env|
   [
     200,
     {
       'Content-Type'  => 'text/html',
-      'Cache-Control' => 'public, max-age=0'
+      'Cache-Control' => 'web, max-age=86400'
     },
     File.open('web/index.html', File::RDONLY)
   ]
