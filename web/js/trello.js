@@ -1,46 +1,3 @@
-(function() {
-    var myConnector = tableau.makeConnector();
-
-    myConnector.getColumnHeaders = function() {
-        var fieldNames = ['Id', 'Name', 'Url'];
-        var fieldTypes = ['string', 'string', 'string'];
-        tableau.headersCallback(fieldNames, fieldTypes);
-    }
-
-    myConnector.getTableData = function(lastRecordToken) {
-        var dataToReturn = [];
-        var hasMoreData = false;
-
-        var connectionUri = tableau.connectionData;
-
-        var xhr = $.ajax({
-            url: connectionUri,
-            dataType: 'json',
-            success: function (data) {
-              if (data) {
-                  var ii;
-                  for (ii = 0; ii < data.length; ++ii) {
-                      var entry = {'Id': data[ii].id,
-                                   'Name': data[ii].name,
-                                   'Url': data[ii].url};
-                      dataToReturn.push(entry);
-                  }
-                  tableau.dataCallback(dataToReturn, lastRecordToken, false);
-                }
-                else {
-                  tableau.abortWithError("No results found for: " + connectionUri);
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-              // If the connection fails, log the error and return an empty set.
-              tableau.log("Connection error: " + xhr.responseText + "\n" + thrownError);
-              tableau.abortWithError("Error while trying to connecto to Trello.");
-            }
-        });
-    }
-
-    tableau.registerConnector(myConnector);
-})();
 (function($, Trello, tableau) {
     var appKey = '2d15ae0a9765d34c2ca6fe0d4aadfce9';
     var token = '';
@@ -53,28 +10,30 @@
         });
     };
 
-    var setCardData = function(e) {
-        token = Trello.token();
+    var getCards = function(e) {
         var $currentTarget = $(e.currentTarget);
         var boardId = $currentTarget.attr('data-board-id');
         var boardName = $currentTarget.text();
         e.preventDefault();
+
         var url = 'https://api.trello.com/1/boards/' + boardId + '/cards?fields=name,idList,url&key=';
             url += appKey;
             url += '&token=';
             url += token;
             url += '&callback=?';
+
         var handleSuccess = function(response) {
-            console.log(response);
+            var jsonString = JSON.stringify(response);
+            _submitToJsonToTableau(jsonString);
         };
+
         var handleError = function(response) {
             console.log(response);
         }
 
-        tableau.connectionName = "Card Data for " + boardName;
-        tableau.connectionData = url;
-        tableau.submit();
+        callApi(url, handleSuccess, handleError);
     };
+
     var getBoards = function() {
         var url = 'https://api.trello.com/1/members/me/boards?key=';
             url += appKey;
@@ -130,7 +89,7 @@
 
     $('#js-authorize').on('click', authorizeTrello);
     $('#js-boards').on('click', '[data-board-id]', function(e) {
-        setCardData(e)
+        getCards(e);
     });
 
 })(jQuery, Trello, tableau);
