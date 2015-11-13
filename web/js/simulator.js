@@ -4,7 +4,7 @@
     tableau = {versionNumber: versionNumber};
 
     tableau.phaseEnum = {
-        interactivePhase: "interactive", 
+        interactivePhase: "interactive",
         authPhase: "auth",
         gatherDataPhase: "gatherData"
     };
@@ -46,9 +46,9 @@ tabSimulatorObj.prototype = {
         this.username = this._ensureStringData(this.username);
         this.password = this._ensureStringData(this.password);
         this.connectionName = this._ensureStringData(this.connectionName);
-        
+
         this.updateSimulatorUI();
-     
+
         // reset authentication state and call init because submit triggers the second phase which starts with a new context
         this._authenticated = true;
 
@@ -135,7 +135,7 @@ tabSimulatorObj.prototype = {
                 }
                 cell.text(cellVal);
                 row.append(cell);
-                
+
                 if (this.incrementalExtractColumn && this.incrementalExtractColumn == colName) {
                     this._lastRefreshColVal = cellVal;
                 }
@@ -152,7 +152,7 @@ tabSimulatorObj.prototype = {
             this.log("No More Data", "blue");
             this._sendShutdown();
         }
-        
+
         // Updates incremental refresh button if there is data and the incremental column is assigned
         if (($('#incrementalExtractColumn').val()) && ($('#incrementalExtractColumn').val().length > 0))
             $('#incrementalRefresh').prop("disabled", false);
@@ -173,13 +173,13 @@ tabSimulatorObj.prototype = {
         var cell = $('<td />');
         cell.text(message);
         row.append(cell);
-        table.append(row);                                                                                                          
+        table.append(row);
     },
 
     reloadConnector: function () {
         this._wasSubmitCalled = false;
     },
-    
+
     _getLastRefreshColumnValue: function () {
         return this._lastRefreshColVal.toString();
     },
@@ -191,7 +191,7 @@ tabSimulatorObj.prototype = {
         }
         this._sendGetColumnHeaders();
     },
-    
+
     _startRequestTableData: function () {
         this._numreads = 0;
         var initialLastRecordToken = this._getLastRefreshColumnValue()
@@ -206,7 +206,7 @@ tabSimulatorObj.prototype = {
         lastRecordToken = this._ensureStringData(lastRecordToken);
         this._sendGetTableData(lastRecordToken);
     },
-    
+
     // Tableau can only accept string data coming from javascript.
     // If we want Tableau to store any data, it needs to be a string.
     // This method checks the type of the data and will notify the connector
@@ -217,11 +217,11 @@ tabSimulatorObj.prototype = {
         }
         return data.toString();
     },
-    
+
     _error: function (message) {
         this.log("ERROR: " + message, "red");
     },
-    
+
     _warn: function (warningMessage) {
         this.log("Warning: " + warningMessage, "orange");
     },
@@ -254,7 +254,7 @@ tabSimulatorObj.prototype = {
         var payloadObj = JSON.parse(event.data);
         var msgData = payloadObj.msgData;
         this._applyPropertyValues(payloadObj.props);
-        
+
         switch(payloadObj.msgName) {
             case "submit":
                 this.submit();
@@ -288,17 +288,17 @@ tabSimulatorObj.prototype = {
     },
 
     _buildMessagePayload: function (msgName, msgData) {
-        var msgObj = {"msgName": msgName, 
-                      "props": this._packagePropertyValues(),  
+        var msgObj = {"msgName": msgName,
+                      "props": this._packagePropertyValues(),
                       "msgData": msgData};
         return JSON.stringify(msgObj);
     },
 
     _packagePropertyValues: function () {
-        var propValues = {"connectionName": this.connectionName, 
-                          "connectionData": this.connectionData, 
-                          "password": this.password, 
-                          "username": this.username, 
+        var propValues = {"connectionName": this.connectionName,
+                          "connectionData": this.connectionData,
+                          "password": this.password,
+                          "username": this.username,
                           "incrementalExtractColumn": this.incrementalExtractColumn};
         return propValues;
     },
@@ -342,7 +342,7 @@ function iframeLoaded(obj) {
 }
 
 function _clearLog() {
-    $('#log').html('<table id="logTable"></table>'); // clear out the log table    
+    $('#log').html('<table id="logTable"></table>'); // clear out the log table
 }
 
 function _getConnectorURL() {
@@ -356,26 +356,26 @@ function _getConnectorURL() {
             var src = params['src'];
             if (src && src.length > 0) {
                 // append the query and hash parts of the url along to the hosted connector
-                return src + docLink.search.substring(0) + docLink.hash.substring(0);            
+                return src + docLink.search.substring(0) + docLink.hash.substring(0);
             }
         }
     } catch (err) {
-        var msg = 
+        var msg =
         msg += "Error description: " + err.message + "\n\n";
-        msg += "Please specify the connector on url line: e.g.\n\n" 
+        msg += "Please specify the connector on url line: e.g.\n\n"
         msg += "Simulator.html?src=ExampleConnector.html.\n\n";
         alert(msg);
     }
 
     // Set the default connector here
-    return "Examples/StockQuoteConnector_final.html"
+    return "trelloConnector.html"
 }
 
 $(document).ready(function () {
     var iFrameID = document.getElementById('host-iframe');
 
     $(window).height();
-    
+
     var $win = $(window);
 
     $win.on('resize',function(){
@@ -384,17 +384,17 @@ $(document).ready(function () {
 
     $("#reload").click(function () { // full reload of connector into iframe
       iFrameID.src = $('#url').val();
-      return false;                              
+      return false;
     });
 
-    $("#incrementalRefresh").click(function () { 
+    $("#incrementalRefresh").click(function () {
       tabSimulator.log("Performing incremental refresh", "blue");
       tabSimulator._sendInit(tableau.phaseEnum.gatherDataPhase);
-      return false;                              
+      return false;
     });
 
     $("#clearLog").click(function () { // Clear log entries
       _clearLog();
-      return false;                              
+      return false;
     });
 });
