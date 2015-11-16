@@ -1,5 +1,5 @@
 (function($, Trello, tableau) {
-    var appKey = '2d15ae0a9765d34c2ca6fe0d4aadfce9';
+    var appKey = window.TRELLO_API_KEY;
     var token = '';
     var callApi = function(url, success, error) {
         $.ajax({

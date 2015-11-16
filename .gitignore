@@ -1,0 +1,8 @@
+#local env config
+local.env.json
+
+#node dependencies
+node_modules
+
+#outputted html file
+web/trelloConnector.html
