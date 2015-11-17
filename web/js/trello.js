@@ -16,31 +16,33 @@
         var boardName = $currentTarget.text();
         e.preventDefault();
 
-        var url = 'https://api.trello.com/1/boards/' + boardId + '/cards?fields=name,idList,url&key=';
-            url += appKey;
-            url += '&token=';
-            url += token;
-            url += '&callback=?';
-
-        var handleSuccess = function(response) {
-            var jsonString = JSON.stringify(response);
+        var submitToTableau = function(jsonData) {
+            var jsonString = JSON.stringify(jsonData);
             _submitToJsonToTableau(jsonString);
         };
+        Trello.get('members/me/cards', function(cards) {
+            var cardsLength = cards.length;
+            console.log('cardsLength', cardsLength);
+            for (var i = cards.length - 1; i >= 0; i--) {
 
-        var handleError = function(response) {
-            console.log(response);
-        }
+                var getCardActions = function() {
+                    var card = cards[i];
+                    Trello.get('/cards/' + card.shortLink + '/actions', function(actions) {
+                        card['actions'] = actions;
+                        cardsLength--;
+                        if (cardsLength === 0) {
+                            submitToTableau(cards);
+                        }
+                    });
+                };
 
-        callApi(url, handleSuccess, handleError);
+                getCardActions(i);
+            };
+        });
+        //callApi(url, handleSuccess, handleError);
     };
 
     var getBoards = function() {
-        var url = 'https://api.trello.com/1/members/me/boards?key=';
-            url += appKey;
-            url += '&token=';
-            url += token;
-            url += '&callback=?';
-
         var handleSuccess = function(response) {
             $boards = $('<div>');
             $boardsHdg = $('<h2>Boards</h2>');
@@ -54,10 +56,10 @@
                    .appendTo('#js-boards');
         };
 
-        var handleError = function(XMLHttpRequest, textStatus, errorThrown) {
-            console.log("Status: " + textStatus + " Error: " + errorThrown);
-        }
-        callApi(url, handleSuccess, handleError);
+        Trello.get("members/me/boards", function(boards) {
+            console.log('boards', boards);
+            handleSuccess(boards);
+        });
     };
     var authenticationSuccess = function() {
         console.log("Successful authentication");

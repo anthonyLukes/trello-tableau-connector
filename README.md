@@ -26,4 +26,4 @@
   ```
 * Run `git add .` and `git commit -m "you git message here"`
 * Run `git push heroku master`
-* When that's done deploying run `heroku open` to view your site in the browser.
+* When that's done deploying run `heroku open` to view your site in the browser. The Heroku app points to `/web/trelloConnector.html` so the the url that gets opened from `heroku open` is what needs to be pasted into the web connect interface in Tableau.

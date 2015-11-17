@@ -15,6 +15,7 @@
   "homepage": "https://bitbucket.org/anthonyLukes/trello-api#readme",
   "dependencies": {
     "gulp": "3.9.0",
+    "gulp-connect": "^2.2.0",
     "gulp-data": "^1.2.0",
     "gulp-nunjucks-render": "^1.0.0",
     "gulp-rename": "1.2.2",
