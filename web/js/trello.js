@@ -22,7 +22,6 @@
         };
         Trello.get('members/me/cards', function(cards) {
             var cardsLength = cards.length;
-            console.log('cardsLength', cardsLength);
             for (var i = cards.length - 1; i >= 0; i--) {
 
                 var getCardActions = function() {
@@ -31,6 +30,7 @@
                         card['actions'] = actions;
                         cardsLength--;
                         if (cardsLength === 0) {
+                            console.log('cards', cards);
                             submitToTableau(cards);
                         }
                     });
@@ -57,18 +57,17 @@
         };
 
         Trello.get("members/me/boards", function(boards) {
-            console.log('boards', boards);
             handleSuccess(boards);
         });
     };
     var authenticationSuccess = function() {
-        console.log("Successful authentication");
+        //console.log("Successful authentication");
         token = Trello.token();
         getBoards(token);
     };
 
     var authenticationFailure = function() {
-        console.log("Failed authentication");
+        //console.log("Failed authentication");
     };
 
     function authorizeTrello() {
