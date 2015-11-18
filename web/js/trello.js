@@ -21,26 +21,26 @@
             console.log("_submitToJsonToTableau", _submitToJsonToTableau);
             _submitToJsonToTableau(jsonString);
         };
-        Trello.get('boards/' + boardId + '/actions', function(cards) {
-            console.log("cards", cards);
-            submitToTableau(cards);
-            // var cardsLength = cards.length;
-            // for (var i = cards.length - 1; i >= 0; i--) {
+        Trello.get('boards/' + boardId + '/cards', function(cards) {
+            //console.log("cards", cards);
+            //submitToTableau(cards);
+            var cardsLength = cards.length;
+            for (var i = cards.length - 1; i >= 0; i--) {
 
-            //     var getCardActions = function() {
-            //         var card = cards[i];
-            //         Trello.get('/cards/' + card.shortLink + '/actions', function(actions) {
-            //             card['actions'] = actions;
-            //             cardsLength--;
-            //             if (cardsLength === 0) {
-            //                 console.log('cards', cards);
-            //                 submitToTableau(cards);
-            //             }
-            //         });
-            //     };
+                var getCardActions = function() {
+                    var card = cards[i];
+                    Trello.get('/cards/' + card.shortLink + '/actions', function(actions) {
+                        card['actions'] = actions;
+                        cardsLength--;
+                        if (cardsLength === 0) {
+                            console.log('cards', cards);
+                            //submitToTableau(cards);
+                        }
+                    });
+                };
 
-            //     getCardActions(i);
-            // };
+                getCardActions(i);
+            };
         });
     };
 
