@@ -34,7 +34,7 @@
                         cardsLength--;
                         if (cardsLength === 0) {
                             console.log('cards', cards);
-                            //submitToTableau(cards);
+                            submitToTableau(cards);
                         }
                     });
                 };
