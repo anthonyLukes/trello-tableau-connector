@@ -18,10 +18,12 @@
 
         var submitToTableau = function(jsonData) {
             var jsonString = JSON.stringify(jsonData);
+            console.log("_submitToJsonToTableau", _submitToJsonToTableau);
             _submitToJsonToTableau(jsonString);
         };
         Trello.get('boards/' + boardId + '/actions', function(cards) {
             console.log("cards", cards);
+            submitToTableau(cards);
             // var cardsLength = cards.length;
             // for (var i = cards.length - 1; i >= 0; i--) {
 
